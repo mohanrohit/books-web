@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="ReadingListApp.js"></script>
+</head>
+<body>
+  <div id="app">
+      <input type="text" v-model="book.title">
+      {{ book.title }}
+
+      <p>Books</p>
+      <ul>
+          <li v-for="book in books">
+              {{book.title}}
+          </li>
+      </ul>
+
+  </div>
+
+  <script>
+    var app = new Vue({
+        el: "#app",
+
+        data: {
+            book: {title: ""},
+            books: []
+        },
+
+        methods: {
+            setTitle: function(event) {
+                this.book.title = event.target.value;
+            }
+        }
+    });
+  </script>
+</body>
+</html>
