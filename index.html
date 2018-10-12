@@ -2,38 +2,26 @@
 <html>
 <head>
   <title>My first Vue app</title>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="ReadingListApp.js"></script>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script src="node_modules/axios/dist/axios.js"></script>
+  <script src="BooksApp.js"></script>
 </head>
 <body>
-  <div id="app">
+  <div id="books-app">
       <input type="text" v-model="book.title">
-      {{ book.title }}
+      <button v-on:click="addBook">add</button>
 
       <p>Books</p>
-      <ul>
-          <li v-for="book in books">
-              {{book.title}}
-          </li>
-      </ul>
 
+      <ul>
+        <li class="book-summary" v-for="book in books">
+            {{book.title}}
+        </li>
+      </ul>
   </div>
 
   <script>
-    var app = new Vue({
-        el: "#app",
-
-        data: {
-            book: {title: ""},
-            books: []
-        },
-
-        methods: {
-            setTitle: function(event) {
-                this.book.title = event.target.value;
-            }
-        }
-    });
+    new BooksApp();
   </script>
 </body>
 </html>

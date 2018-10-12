@@ -1,0 +1,25 @@
+{
+  "name": "books-web",
+  "version": "1.0.0",
+  "description": "This is the Books web application.",
+  "main": "main.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohanrohit/books-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohanrohit/books-web/issues"
+  },
+  "homepage": "https://github.com/mohanrohit/books-web#readme"
+}
