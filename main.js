@@ -1,3 +1,4 @@
+const axios = require("axios");
 const express = require("express");
 
 const app = express();
@@ -21,12 +22,16 @@ app.get("/", (request, response) => {
     response.render("index");
 });
 
-app.get("/books", (request, response) => {
-    response.render("books", {books: books});
+app.get("/books", async (request, response) => {
+    const result = await axios.get("http://localhost:8080/api/v1/books");
+
+    response.render("books", {books: result.data["books"]});
 });
 
-app.get("/books/:id", (request, response) => {
-    response.render("book", {book: books[parseInt(request.params.id)]});
+app.get("/books/:id", async (request, response) => {
+    const result = await axios.get(`http://localhost:8080/api/v1/books/${request.params.id}`);
+
+    response.render("book", {book: result.data});
 });
 
 app.listen(process.env.PORT || 8081, () => {

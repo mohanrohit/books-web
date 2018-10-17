@@ -12,15 +12,13 @@
   </head>
   <body>
     <div class="container">
-      <% books.forEach(function(book, index) { %>
       <div class="col-sm-4">
         <div class="panel">
           <div class="panel-body">
-            <p><a href="/books/<%= book.id %>"><%= book.title %></a></p>
+            <p><%= book.title %></p>
           </div>
         </div>
       </div>
-      <% }) %>
   </div>
   </body>
 </html>
