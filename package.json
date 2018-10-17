@@ -5,8 +5,8 @@
   "main": "main.js",
   "dependencies": {
     "axios": "^0.18.0",
-    "express": "^4.16.4",
-    "vue": "^2.5.17"
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
   },
   "devDependencies": {},
   "scripts": {

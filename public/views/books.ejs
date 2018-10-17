@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <style>
+      body {
+        background-color: #ecedec;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <% books.forEach(function(book, index) { %>
+      <div class="col-sm-6">
+        <div class="panel">
+          <div class="panel-body">
+            <h4><%= book %></h4>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+  </div>
+  </body>
+</html>
