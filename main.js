@@ -1,46 +1,52 @@
-const axios = require("axios");
+require("dotenv").config();
+
 const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const Auth0Strategy = require("passport-auth0");
+const bodyParser = require("body-parser");
+const axios = require("axios");
 
 const app = express();
 
 app.set("view engine", "ejs");
-app.set("views", `${__dirname}/public/views`);
+app.set("views", `${__dirname}/app/views`);
 
 app.use(express.static(`${__dirname}/public`));
 
-// code adapted from https://auth0.com/docs/quickstart/webapp/nodejs
-app.use(session({
-    secret: `${process.env.SESSION_SECRET}`,
-    cookie: {},
-    resave: false,
-    saveUninitialized: true
-}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-var strategy = new Auth0Strategy({
-        domain: `process.env.AUTH0_DOMAIN`,
-        clientID: `process.env.AUTH0_CLIENT_ID`,
-        clientSecret: `process.env.AUTH0_CLIENT_SECRET`,
-        callbackURL: "http://localhost:8081/auth/callback",
-        state: true
-    },
-    function(accessToken, refreshToken, extraParams, profile, done) {
-        return done(null, profile);
+async function authorize(request, response, next)
+{
+    if (request.body.access_token)
+    {
+        return next();
     }
-);
 
-passport.use(strategy);
+    var result = await axios.post(`${process.env.AUTH0_DOMAIN}/oauth/token`, {
+        client_id: `${process.env.AUTH0_CLIENT_ID}`,
+        client_secret: `${process.env.AUTH0_CLIENT_SECRET}`,
+        grant_type: "client_credentials",
+        audience: `${process.env.AUTH0_AUDIENCE}`
+    });
 
-app.use(passport.initialize());
-app.use(passport.session());
+    if (!result.data.access_token)
+    {
+        response.send({error: {code: 401, message: "Unauthorized"}});
+
+        return;
+    }
+
+    request.accessToken = result.data.access_token;
+    
+    axios.defaults.headers.common["Authorization"] = `Bearer ${request.accessToken}`;
+
+    return next();
+}
 
 app.get("/", (request, response) => {
     response.render("index");
 });
 
-app.get("/books", async (request, response) => {
+app.get("/books", authorize, async (request, response) => {
     const result = await axios.get("http://localhost:8080/api/v1/books");
 
     response.render("books", {books: result.data["books"]});
@@ -53,5 +59,5 @@ app.get("/books/:id", async (request, response) => {
 });
 
 app.listen(process.env.PORT || 8081, () => {
-    console.log("Serving the books-web application");
+    console.log("Serving the Books web application");
 });
