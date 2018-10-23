@@ -1,22 +1,40 @@
 const axios = require("axios");
 const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
+const Auth0Strategy = require("passport-auth0");
 
 const app = express();
-
-const books = [
-    "Harry Potter and the Sorcerer's Stone",
-    "Harry Potter and the Chamber of Secrets",
-    "Harry Potter and the Prisoner of Azkaban",
-    "Harry Potter and the Goblet of Fire",
-    "Harry Potter and the Order of the Phoenix",
-    "Harry Potter and the Half-Blood Prince",
-    "Harry Potter and the Deathly Hallows"
-];
 
 app.set("view engine", "ejs");
 app.set("views", `${__dirname}/public/views`);
 
 app.use(express.static(`${__dirname}/public`));
+
+// code adapted from https://auth0.com/docs/quickstart/webapp/nodejs
+app.use(session({
+    secret: `${process.env.SESSION_SECRET}`,
+    cookie: {},
+    resave: false,
+    saveUninitialized: true
+}));
+
+var strategy = new Auth0Strategy({
+        domain: `process.env.AUTH0_DOMAIN`,
+        clientID: `process.env.AUTH0_CLIENT_ID`,
+        clientSecret: `process.env.AUTH0_CLIENT_SECRET`,
+        callbackURL: "http://localhost:8081/auth/callback",
+        state: true
+    },
+    function(accessToken, refreshToken, extraParams, profile, done) {
+        return done(null, profile);
+    }
+);
+
+passport.use(strategy);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (request, response) => {
     response.render("index");
